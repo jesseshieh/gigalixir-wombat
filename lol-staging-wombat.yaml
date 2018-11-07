@@ -55,8 +55,28 @@ spec:
         ports:
         - containerPort: 8080
           protocol: TCP
+        volumeMounts:
+        - name: wombat-persistent-storage
+          mountPath: /wombat/data
       dnsPolicy: ClusterFirst
       restartPolicy: Always
+      volumes:
+      - name: wombat-persistent-storage
+        persistentVolumeClaim:
+          claimName: wombat-pv-claim
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: wombat-pv-claim
+  namespace: lol-staging
+spec:
+  storageClassName: io1
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
