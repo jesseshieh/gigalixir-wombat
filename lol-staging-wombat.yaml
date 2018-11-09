@@ -58,6 +58,13 @@ spec:
         volumeMounts:
         - name: wombat-persistent-storage
           mountPath: /wombat/data
+        resources:
+          requests:
+            cpu: 800m
+            memory: 1Gi 
+          limits:
+            cpu: 800m
+            memory: 1Gi 
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:
@@ -71,12 +78,12 @@ metadata:
   name: wombat-pv-claim
   namespace: lol-staging
 spec:
-  storageClassName: io1
+  storageClassName: gp2
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
+      storage: 10Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
