@@ -49,12 +49,19 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: status.podIP
+        lifecycle:
+          postStart:
+            exec:
+              command: ["service", "ssh", "start"]
         image: us.gcr.io/gigalixir-152404/gigalixir-wombat
         imagePullPolicy: Always
         name: wombat
         ports:
         - containerPort: 8080
           protocol: TCP
+        volumeMounts:
+        - name: wombat-persistent-storage-logs
+          mountPath: /wombat/logs
         volumeMounts:
         - name: wombat-persistent-storage
           mountPath: /wombat/data
@@ -65,12 +72,41 @@ spec:
           limits:
             cpu: 800m
             memory: 1Gi 
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
+      # sidecar datadog container
+      - name: dogstatsd
+        image: datadog/docker-dogstatsd
+        env:
+        - name: API_KEY
+          value: $DATADOG_API_KEY
+        resources:
+          requests:
+            cpu: 80m
+            memory: 100Mi 
+          limits:
+            cpu: 80m
+            memory: 100Mi
       volumes:
+      - name: wombat-persistent-storage-logs
+        persistentVolumeClaim:
+          claimName: wombat-pv-claim-logs
       - name: wombat-persistent-storage
         persistentVolumeClaim:
           claimName: wombat-pv-claim
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: wombat-pv-claim-logs
+  namespace: lol-staging
+spec:
+  storageClassName: gp2
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
