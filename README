@@ -1,0 +1,1 @@
+docker build . -t us.gcr.io/gigalixir-152404/gigalixir-wombat:dev
