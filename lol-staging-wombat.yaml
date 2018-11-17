@@ -61,8 +61,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - name: wombat-persistent-storage-logs
-          mountPath: /wombat/logs
-        volumeMounts:
+          mountPath: /wombat/log
         - name: wombat-persistent-storage
           mountPath: /wombat/data
         resources:
