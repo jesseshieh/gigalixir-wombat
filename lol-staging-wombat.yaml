@@ -66,11 +66,11 @@ spec:
           mountPath: /wombat/data
         resources:
           requests:
-            cpu: 800m
-            memory: 1Gi 
+            cpu: 600m
+            memory: 750Mi 
           limits:
-            cpu: 800m
-            memory: 1Gi 
+            cpu: 600m
+            memory: 750Mi 
       # sidecar datadog container
       - name: dogstatsd
         image: datadog/docker-dogstatsd
@@ -79,11 +79,11 @@ spec:
           value: $DATADOG_API_KEY
         resources:
           requests:
-            cpu: 80m
-            memory: 100Mi 
+            cpu: 200m
+            memory: 250Mi 
           limits:
-            cpu: 80m
-            memory: 100Mi
+            cpu: 200m
+            memory: 250Mi
       volumes:
       - name: wombat-persistent-storage-logs
         persistentVolumeClaim:
